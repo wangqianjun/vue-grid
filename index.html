@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Yoho-vue-grid</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="col-md-12">
+        <h1>Yoho Vue Grid</h1>
+        <yoho-grid rows="{{gridData}}" columns="{{gridColNames}}" per-page="10" id="a-table"></yoho-grid>
+        <pagination id="a-table"></pagination>
+    </div>
+</div>
+
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.1/vue.js"></script>-->
+<!--<script src="./js/vue-0.12.1.js"></script>-->
+<script src="./js/vue.js"></script>
+<script src="yoho-grid.js"></script>
+
+
+<script>
+
+
+
+    var vdata ;
+    (function () {
+        var dataArr = [];
+        for(var i = 0; i < 1000; i++) {
+            switch (i % 5) {
+                case 0:
+                    dataArr.push({name: '阿瑟'+i, age: i});
+                    break;
+
+                case 1:
+                    dataArr.push({name: '大卫'+i, age: i});
+                    break;
+
+                case 2:
+                    dataArr.push({name: '俊杰'+i, age: i});
+                    break;
+
+                case 3:
+                    dataArr.push({name: '陶雨'+i, age: i});
+                    break;
+
+                case 4:
+                    dataArr.push({name: '江敏'+i, age: i});
+                    break;
+
+                default :
+                    dataArr.push({name: '阿瑟'+i, age: i});
+                    break;
+            }
+
+        }
+
+        vdata = dataArr
+    })();
+
+    var vm = new Vue({
+        el: 'body',
+        data: function() {
+            return {
+                searchQuery: '',
+                gridColNames: ['name', 'age'],
+                gridData: vdata
+
+            };
+        }
+    });
+
+    </script>
+</body>
+</html>

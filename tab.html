@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Yoho-vue-grid</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+</head>
+<body>
+
+<style>
+
+    h3 {
+        color: #42b983;
+    }
+
+    .classA {
+        background-color: red;
+    }
+
+    .classB {
+        background-color: green;
+    }
+
+    /*必需*/
+    .expand-transition {
+        transition: all .3s ease;
+        height: 30px;
+        padding: 10px;
+        background-color: #eee;
+        overflow: hidden;
+    }
+
+    .expand-enter, .expand-leave {
+        height: 0;
+        padding: 0 10px;
+        opacity: 0;
+    }
+</style>
+
+<div class="container">
+    <div class="col-md-12">
+
+        <div id="bind" class="form-group">
+            <h1>数据绑定</h1>
+            <input v-model="message"/>
+
+            <p>{{message}}</p>
+
+            <!-- 输入html-->
+            <p>{{{htmlEl}}}</p>
+
+            <!-- 绑定表达式可以是Javascript表达式-->
+            <p>{{result?'true':'false'}}</p>
+
+            <!-- 绑定表达式里面可以是过滤器-->
+            <p>{{}}</p>
+
+            <h1>指令</h1>
+
+            <h3>v-if</h3>
+
+            <p v-if="greeting">[v-if] is true, so say: Hello!</p>
+
+            <h3>v-bind</h3>
+            <a v-bind:href="url">{{url}}</a>
+            <button :disabled="buttonDisable">v-bind缩写</button>
+
+            <h3>v-on</h3>
+            <a v-on:click="doSomething">doSomething()</a>
+            <a @click="doSomething">doSomething(缩写)</a>
+            <p v-if="do">do something method has been invoked!</p>
+
+            <h3>计算属性</h3>
+            <p>{{counter}}</p>
+
+            <p>==================================================</p>
+            <h1>Class与Style绑定</h1>
+
+            <h2>绑定HTML Class</h2>
+            <h3>对象语法</h3>
+
+            <p @click="changeStyle" v-bind:class="{'classA': isA, 'classB': isB}">
+                {{className}}
+            </p>
+
+            <h3>数组语法</h3>
+            <p @click="changeStyle" v-bind:class="[classA, isB ? classB:'']"> 数组语法{{className}}</p>
+
+            <h2>绑定内联样式</h2>
+            <p v-bind:style="{color: activeColor, fontSize: fontSize + 'px'}"> 对象语法 </p>
+            <p v-bind:style="styleObject"> 对象语法 </p>
+
+        </div>
+
+        <p>================================================</p>
+        <div id="condition-shader">
+            <h1>条件渲染</h1>
+            <h2 @click="vif">v-if：戳我 <---</h2>
+            <p v-if="ok"> v-if </p>
+            <p v-else> v-else <span style="color: red;"> </span> </p>
+
+
+            <h2 @click="tVif">template v-if 戳我 <---</h2>
+            <h3>用v-if控制多个元素</h3>
+            <template v-if="tOk">
+                <p>v-if 1</p>
+                <p>v-if 2</p>
+                <p>v-if 3</p>
+                <p>v-if 4</p>
+            </template>
+
+            <template v-else>
+                <p>v-else 1</p>
+                <p>v-else 2</p>
+                <p>v-else 3</p>
+                <p>v-else 4</p>
+            </template>
+
+            <h2>v-show</h2>
+            <h4>另一个根据条件展示元素的选项是 v-show 指令</h4>
+            <h4>不同的是 v-show 的元素会始终渲染并保持在DOM中</h4>
+
+        </div>
+
+        <p>================================================</p>
+        <div id="list">
+            <h1>列表渲染</h1>
+            <h2>v-for</h2>
+            <ul>
+                <li v-for="message in messages(10)">
+                    {{parentMsg}} - {{message.content}} - {{$index}}
+                </li>
+
+            </ul>
+
+            <h2>template v-for</h2>
+            <ul>
+                <template v-for="message in messages(5)">
+                    <li>{{message.title}}
+                        <p>{{message.content}}</p>
+                    </li>
+                </template>
+            </ul>
+
+
+            <h1>数组变动监测</h1>
+            <h2>track-by</h2>
+            <h4>使 Vue尽可能的复用已有实例</h4>
+            <template v-for="message in messages(5)" track-by="_id">
+                <li>{{message.title}}
+                    <p>{{message.content}}</p>
+                </li>
+            </template>
+
+
+            <h2>对象v-for 使用 $key</h2>
+            <template v-for="value in obj" >
+                <li>{{$key}} : {{value}}
+                </li>
+            </template>
+        </div>
+
+        <p>===================================================</p>
+        <div id="event-handle">
+            <h1>方法与事件处理器</h1>
+            <h2>方法处理器</h2>
+            <button v-on:click="greet">Say Hello</button>
+            <h2>内联语句处理器</h2>
+            <button v-on:click="say('hello', $event)">Say Something</button>
+
+            <h2>事件修饰符</h2>
+            <a v-on:click.stop="doThis">.Stop</a>
+            <a v-on:click.prevent="doThat">.Stop</a>
+
+            <h2>按键修饰符</h2>
+            <input type="text" v-on:keyup.enter="enterAction"/> <span style="color:yellowgreen;">{{enter}}</span>
+        </div>
+
+        <p>===================================================</p>
+        <div id="form-el">
+            <h1>表单控件绑定</h1>
+            <h2>基础用法</h2>
+            <h4>可以用 v-model 指令在表单控件元素上创建双向数据绑定</h4>
+            <h3>Text</h3>
+            <span>Message is: {{message}}</span>
+            <br/>
+            <input type="text" v-model="message" placeholder="edit me" name="" id=""/>
+
+            <h3>Checkbox</h3>
+            <h6>单个勾选框</h6>
+            <input type="checkbox" id="checkbox" v-model="checked"/>
+            <label for="checkbox">{{checked}}</label>
+
+            <h6>多个勾选框，绑定到同一个数组</h6>
+            <input type="checkbox" id="jack" value="Jack" v-model="checkedNames"/> <label for="jack">Jack</label>
+            <input type="checkbox" id="arthur" value="Arthur" v-model="checkedNames"/> <label for="arthur">Arthur</label>
+            <input type="checkbox" id="john" value="John" v-model="checkedNames"/> <label for="john">John</label>
+            <input type="checkbox" id="mike" value="Mike" v-model="checkedNames"/> <label for="mike">Mike</label>
+            <br/>
+            <span>Checked names: {{checkedNames | json}}</span>
+
+            <h3>Radio</h3>
+            <input type="radio" id="one" value="One" v-model="picked">
+            <label for="one">One</label>
+            <br>
+            <input type="radio" id="two" value="Two" v-model="picked">
+            <label for="two">Two</label>
+            <br>
+            <span>Picked: {{ picked }}</span>
+
+            <h3>Select</h3>
+            <h6>单选</h6>
+            <select v-model="selected">
+                <option selected>A</option>
+                <option>B</option>
+                <option>C</option>
+            </select>
+            <span>Selected: {{ selected }}</span>
+
+            <h6>多选</h6>
+            <select v-model="mulSelected" multiple>
+                <option selected>A</option>
+                <option>B</option>
+                <option>C</option>
+            </select>
+            <br>
+            <span>Selected: {{ mulSelected | json }}</span>
+
+        </div>
+        <p>================================================</p>
+        <br/>
+        <br/>
+        <div id="transition-el">
+            <h1>过渡</h1>
+            <h6>为了应用过渡效果，需要在目标元素上使用 transition 特性：</h6>
+
+            <h2>CSS 过渡</h2>
+            <h3>示例</h3>
+            <div v-if="show" transition="expand">hello</div>
+        </div>
+    </div>
+
+</div>
+
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.1/vue.js"></script>-->
+<!--<script src="./js/vue-0.12.1.js"></script>-->
+<script src="./js/vue.js"></script>
+<script src="yoho-grid.js"></script>
+
+
+<script>
+    var vm = new Vue({
+
+        el: '#bind',
+        data: {
+            htmlEl: '<h1>hh</h1>',
+            message: 'message',
+            result: false,
+            greeting: true,
+            url: 'http://www.baidu.com',
+            do: false,
+            count: 1,
+            isA: true,
+            isB: false,
+            className:'class',
+            activeColor: 'red',
+            fontSize: 14,
+            styleObject: {
+                color: 'green',
+                fontSize: '15px'
+            }
+        },
+
+        // 计算属性
+        computed: {
+            counter: function () {
+                return ++this.count;
+            },
+
+            className: function () {
+                if(this.isA) return 'class a';
+                if(this.isB) return 'class b';
+                return 'default class';
+            }
+
+        },
+
+        methods: {
+            buttonDisable: function () {
+                console.log('button disabled');
+            },
+            doSomething: function () {
+                console.log('do something method invoked!');
+
+                // this 指向 vm 实例
+                this.do = !this.do;
+            },
+
+            changeStyle: function () {
+                this.isA = !this.isA;
+                this.isB = !this.isB;
+            }
+        }
+    });
+
+    console.log('vm.data = ' + vm.data);
+
+
+</script>
+
+<script>
+    var vm = new Vue({
+
+        el: '#condition-shader',
+        data: {
+            ok: true,
+            tOk: true
+        },
+
+        // 计算属性
+        computed: {
+            counter: function () {
+                ;
+            }
+
+        },
+
+        methods: {
+            vif: function () {
+                this.ok = !this.ok;
+            },
+
+            tVif: function () {
+                this.tOk = !this.tOk;
+            }
+
+        }
+    });
+
+</script>
+
+<script>
+    var eventHandleVM = new Vue({
+
+        el: '#event-handle',
+        data: {
+            enter: '',
+            checked: false
+        },
+
+        // 计算属性
+        computed: {
+
+        },
+
+        methods: {
+            greet: function () {
+                alert('Hello');
+            },
+            say: function (msg, event) {
+//                alert(msg + ':/n' + event);
+                console.log(event.preventDefault());
+                event.preventDefault();
+            },
+
+            doThis: function () {
+                alert('do this');
+            },
+            doThat: function () {
+                alert('do that');
+            },
+            enterAction: function () {
+                console.log('enter key press');
+                this.enter = "enter key is pressed"
+
+            }
+
+        }
+    });
+
+</script>
+
+<script>
+    var formVM = new Vue({
+
+        el: '#form-el',
+        data: {
+            message: '',
+            checked: false,
+            checkedNames:[],
+            picked: 'One', // default value
+            selected: '',
+            mulSelected: []
+        },
+
+        // 计算属性
+        computed: {
+
+        },
+
+        methods: {
+            greet: function () {
+                alert('Hello');
+            },
+            say: function (msg, event) {
+//                alert(msg + ':/n' + event);
+                console.log(event.preventDefault());
+                event.preventDefault();
+            },
+
+            doThis: function () {
+                alert('do this');
+            },
+            doThat: function () {
+                alert('do that');
+            },
+            enterAction: function () {
+                console.log('enter key press');
+                this.enter = "enter key is pressed"
+
+            }
+
+        }
+    });
+
+</script>
+
+<script>
+    var transitionVM = new Vue({
+        el: '#transition-el',
+        data {
+            show: false,
+            transitionName: 'fade'
+        }
+
+    });
+</script>
+</body>
+</html>
